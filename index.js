@@ -63,7 +63,7 @@ client.on('message', message => {
         for (var i = 0; i < taskIDs.length; i++) {
             const taskID = taskIDs[i];
 
-            hacknplan.fetchHacknPlan(config.hacknplan_project + '/workitems/' + taskID.slice(1), 'GET').then(response => {
+            hacknplan.getTask(taskID.slice(1)).then(response => {
                 return response.json();
             }).then(result => {
 

@@ -31,7 +31,7 @@ module.exports = class CreateCommand extends Command {
 		// We're going to store a list of categories here to later reference when creating the task
 		let categories;
 
-		hacknplan.fetchHacknPlan(`${config.hacknplan_project}/categories`, 'GET').then(response => { return response.json(); }).then(result => {
+		hacknplan.getCategories().then(response => { return response.json(); }).then(result => {
 			categories = result;
 
 			var returnMessage = 'Please choose a category: ';
@@ -47,7 +47,7 @@ module.exports = class CreateCommand extends Command {
 			collector.on('collect', m => {
 				message.reply(`Thank you! You created a task with these details:\n\n**Title:** ${title}\n**Description:** ${description}\n**Category:** ${categories[m].name}\n\nSending the request to HacknPlan now...`);
 
-				const hacknplanTask = JSON.stringify({
+				const hacknplanTask = {
 					"title": title,
 					"description": description,
 					"parentId": null,
@@ -63,9 +63,9 @@ module.exports = class CreateCommand extends Command {
 					"tagIds": null,
 					"subTasks": null,
 					"dependencyIds": null
-				});
+				};
 
-				hacknplan.postHacknPlan(config.hacknplan_project + '/workitems', 'POST', hacknplanTask).then(result => message.reply(`Hacknplan responsed with: ${result.status} - ${result.statusText}`)).catch(e => message.reply(e));
+				hacknplan.createTask(hacknplanTask).then(result => message.reply(`Hacknplan responsed with: ${result.status} - ${result.statusText}`)).catch(e => message.reply(e));
 			});
 		});
     }
